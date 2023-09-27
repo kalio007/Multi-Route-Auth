@@ -1,6 +1,8 @@
 // we use the models and route application here
 const express = require('express');
 const bcrypt = require('bcrypt')
+require('dotenv').config();
+const jwt = require('jsonwebtoken')
 
 
 const landing = async (req, res) => {
@@ -29,6 +31,7 @@ const verify = async (req, res) => {
         res.status(500).send()
     }
 }
+
 const findUser = async (req, res) => {
     //assuming User is the schema from the schema
     // CHORE: add the database
@@ -37,6 +40,7 @@ const findUser = async (req, res) => {
         return res.status(400).send("cannot find user")
     }
     try {
+        //compare the password for auth
         if (await brcrypt.compare(req.body.password, user.password)) {
             res.send("success")
         } else {
@@ -46,9 +50,22 @@ const findUser = async (req, res) => {
 
     }
 }
+const token = async (req, res) => {
+    const username = req.body.username
+    const user = { name: username }
+    const accessToken = generateAccessToken(user)
+    const refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET)
+    res.json({ accessToken: accessToken, refreshToken: refreshToken })
 
+}
+
+function generateAccessToken(user) {
+    return accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '10mins' })
+}
 
 module.exports = {
     landing,
     verify,
+    findUser,
+    token
 }

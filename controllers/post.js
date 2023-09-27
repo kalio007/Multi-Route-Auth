@@ -13,24 +13,14 @@ const upPost = [
     }
 ]
 
-
-
-
-
 const post = async (req, res) => {
     try {
-
         return res.status(200).json(upPost)
     } catch (error) {
         return res.status(500).json({ message: error.message })
     }
 }
-const login = async (req, res) => {
-    //authenticate user
 
-    const username = req.body.username
-}
 module.exports = {
     post,
-    login
 }

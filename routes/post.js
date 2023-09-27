@@ -1,18 +1,16 @@
 const express = require('express');
 const router = express.Router();
-
-
-
+const { authenticateToken } = require('../middleware/auth')
 //import the neccessary controller
 const {
     post,
-    login
 } = require('../controllers/post')
 
-//decalre all route for the collection
-router.get('/', post);
-router.post('/login', login)
 
+
+
+//decalre all routes for the collection
+router.get('/', authenticateToken, post);
 
 
 module.exports = router;
